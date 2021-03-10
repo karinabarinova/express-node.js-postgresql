@@ -14,15 +14,33 @@ exports.submit_lead = function(req, res, next) {
 }
 
 exports.show_leads = function(req, res, next) {
-    models.Lead.findAll().then(leads => {
+    return models.Lead.findAll().then(leads => {
         res.render('landing', { title: 'Express', leads })
     })
 }
 
 exports.show_lead = function(req, res, next) {
-    models.Lead.findOne({
+    return models.Lead.findOne({
         where: {id: req.params.id}
     }).then(lead => {
         res.render('lead', { lead })
+    })
+}
+
+exports.show_edit_lead = function(req, res, next) {
+    return models.Lead.findOne({
+        where: {id: req.params.id}
+    }).then(lead => {
+        res.render('lead/edit_lead', { lead })
+    })
+}
+
+exports.edit_lead = function(req, res, next) {
+    return models.Lead.update({
+        email: req.body.lead_email
+    }, { 
+        where: { id: req.params.id }
+    }).then(result => {
+        res.redirect('/lead/' + req.params.id)
     })
 }
